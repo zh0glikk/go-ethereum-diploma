@@ -28,4 +28,5 @@ curl http://localhost:8543/ \
 ```
 
 ### Response :
-> {"jsonrpc":"2.0","id":1,"result":{"swaps":[[{"type":"v3","pair":"0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640","input":"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","output":"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48","inputAmount":274800000000000000000},{"type":"v3","pair":"0x3416cf6c708da44db2624d63ea0aaef7113527c6","input":"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48","output":"0xdac17f958d2ee523a2206206994597c13d831ec7","inputAmount":501322652045},{"type":"v3","pair":"0x11b815efb8f581194ae79006d24e0d814b7697f6","input":"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","output":"0xdac17f958d2ee523a2206206994597c13d831ec7","inputAmount":68700000000000000000}]],"duration":54}}
+> {"jsonrpc":"2.0","id":1,"result":{"swaps":[[{"type":"v2","pair":"0xf6230de716e50bdbf4c5ea2b5e7d006bc6af603c","input":"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","output":"0x5acd02940d2e56d9402b8d224e56bd800c544466","inputAmount":884800000000000000}]],"duration":21}}
+ 
