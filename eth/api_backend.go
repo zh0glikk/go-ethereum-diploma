@@ -263,6 +263,14 @@ func (b *EthAPIBackend) GetEVM(ctx context.Context, msg *core.Message, state *st
 	return vm.NewEVM(context, txContext, state, b.eth.blockchain.Config(), *vmConfig)
 }
 
+func (b *EthAPIBackend) GetEVMWithContext(ctx context.Context, msg *core.Message, state *state.StateDB, header *types.Header, vmConfig *vm.Config, blockContext vm.BlockContext) (*vm.EVM, func() error, error) {
+	if vmConfig == nil {
+		vmConfig = b.eth.blockchain.GetVMConfig()
+	}
+	txContext := core.NewEVMTxContext(msg)
+	return vm.NewEVM(blockContext, txContext, state, b.eth.blockchain.Config(), *vmConfig), state.Error, nil
+}
+
 func (b *EthAPIBackend) SubscribeRemovedLogsEvent(ch chan<- core.RemovedLogsEvent) event.Subscription {
 	return b.eth.BlockChain().SubscribeRemovedLogsEvent(ch)
 }
@@ -337,6 +345,10 @@ func (b *EthAPIBackend) SubscribeNewTxsEvent(ch chan<- core.NewTxsEvent) event.S
 	return b.eth.txPool.SubscribeTransactions(ch, true)
 }
 
+func (b *EthAPIBackend) GetChainContext() core.ChainContext {
+	return b.eth.BlockChain()
+}
+
 func (b *EthAPIBackend) SyncProgress() ethereum.SyncProgress {
 	return b.eth.Downloader().Progress()
 }
@@ -394,6 +406,10 @@ func (b *EthAPIBackend) ServiceFilter(ctx context.Context, session *bloombits.Ma
 
 func (b *EthAPIBackend) Engine() consensus.Engine {
 	return b.eth.engine
+}
+
+func (b *EthAPIBackend) StateAtBlockCustom(ctx context.Context, block *types.Block, reexec uint64, base *state.StateDB, readOnly bool, preferDisk bool) (*state.StateDB, func(), error) {
+	return b.eth.stateAtBlock(ctx, block, reexec, base, readOnly, preferDisk)
 }
 
 func (b *EthAPIBackend) CurrentHeader() *types.Header {

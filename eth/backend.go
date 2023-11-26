@@ -20,6 +20,7 @@ package eth
 import (
 	"errors"
 	"fmt"
+	"github.com/ethereum/go-ethereum/internal/arbitrageapi"
 	"math/big"
 	"runtime"
 	"sync"
@@ -323,7 +324,12 @@ func (s *Ethereum) APIs() []rpc.API {
 		}, {
 			Namespace: "eth",
 			Service:   downloader.NewDownloaderAPI(s.handler.downloader, s.eventMux),
-		}, {
+		},
+		{
+			Namespace: "eth",
+			Service:   arbitrageapi.NewArbitrageAPI(s.APIBackend),
+		},
+		{
 			Namespace: "admin",
 			Service:   NewAdminAPI(s),
 		}, {
@@ -332,6 +338,10 @@ func (s *Ethereum) APIs() []rpc.API {
 		}, {
 			Namespace: "net",
 			Service:   s.netRPCService,
+		},
+		{
+			Namespace: "trace",
+			Service:   arbitrageapi.NewTraceAPI(s.APIBackend),
 		},
 	}...)
 }

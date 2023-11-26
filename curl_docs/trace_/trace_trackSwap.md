@@ -1,0 +1,31 @@
+## trace_trackSwap
+
+```shell
+curl http://localhost:8543/ \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d '{
+        "jsonrpc":"2.0",
+        "method":"trace_trackSwap",
+        "params":[       
+	        {
+		        "transactions": [
+		        {
+                      "from":"0x1a3eb84BE3DdfAB270B04d423F3C493418caC938",
+                      "to":"0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+	                  "data":"0x38ed17390000000000000000000000000000000000000000000000000c4770e98144000000000000000000000000000000000000000000000000000000180d31282e223900000000000000000000000000000000000000000000000000000000000000a00000000000000000000000001a3eb84be3ddfab270b04d423f3c493418cac93800000000000000000000000000000000000000000000000000000000653b57620000000000000000000000000000000000000000000000000000000000000002000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc20000000000000000000000005acd02940d2e56d9402b8d224e56bd800c544466",
+                      "value": "0x0"
+		        }
+		    ]
+		    },
+            "0x1195E28",
+            {
+            
+            }
+        ],
+        "id":1
+    }'
+```
+
+### Response :
+> {"jsonrpc":"2.0","id":1,"result":{"swaps":[[{"type":"v3","pair":"0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640","input":"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","output":"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48","inputAmount":274800000000000000000},{"type":"v3","pair":"0x3416cf6c708da44db2624d63ea0aaef7113527c6","input":"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48","output":"0xdac17f958d2ee523a2206206994597c13d831ec7","inputAmount":501322652045},{"type":"v3","pair":"0x11b815efb8f581194ae79006d24e0d814b7697f6","input":"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","output":"0xdac17f958d2ee523a2206206994597c13d831ec7","inputAmount":68700000000000000000}]],"duration":54}}
