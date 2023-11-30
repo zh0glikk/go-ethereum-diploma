@@ -1,4 +1,4 @@
-## eth_callMany for opposite buy triplet
+## eth_callMany for counter contract
 
 ### Curl :
 
