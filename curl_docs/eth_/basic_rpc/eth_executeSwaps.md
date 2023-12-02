@@ -16,11 +16,11 @@ curl http://localhost:8543/ \
          "pairs": [
              {
                   "pair": "0x8db1b906d47dfc1d84a87fc49bd0522e285b98b9",
-                  "pair_version": 3,
+                  "pair_version": 3
              }, 
              {
                   "pair": "0x1f4c763bde1d4832b3ea0640e66da00b98831355",
-                  "pair_version": 3,
+                  "pair_version": 3
              }
          ],
          "transactions":[
