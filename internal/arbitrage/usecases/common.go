@@ -114,7 +114,7 @@ func prepareSwapsTransactions(
 		})
 	}
 
-	log.Info(fmt.Sprintf("front: %s\nback: %s", hexutil.Encode(sellBB), hexutil.Encode(sellBB)))
+	log.Info(fmt.Sprintf("front: %s\nback: %s", hexutil.Encode(purchaseBB), hexutil.Encode(sellBB)))
 
 	return transactions
 }
