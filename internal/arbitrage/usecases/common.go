@@ -115,5 +115,7 @@ func prepareSwapsTransactions(
 		})
 	}
 
+	log.Info(fmt.Sprintf("%v", transactions))
+
 	return transactions
 }
