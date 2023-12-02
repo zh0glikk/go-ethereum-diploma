@@ -3,9 +3,11 @@ package unpacker
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/models"
+	"github.com/ethereum/go-ethereum/log"
 	"math/big"
 )
 
@@ -37,6 +39,14 @@ func (_ newUnpacker) ParseBalanceOf(resp []models.CallManyResponseDTO) (*big.Int
 func (_ newUnpacker) ParseFee(resp []models.CallManyResponseDTO) (*big.Int, error) {
 	if resp[0].Value == nil {
 		return nil, errors.New("pairFee failed")
+	}
+	return new(big.Int).SetBytes(resp[0].Value.(hexutil.Bytes)[:32]), nil
+}
+
+func (_ newUnpacker) ParseOutputAmount(resp []models.CallManyResponseDTO) (*big.Int, error) {
+	if resp[0].Value == nil {
+		log.Info(fmt.Sprintf("%v", resp))
+		return nil, errors.New("ParseOutputAmount failed")
 	}
 	return new(big.Int).SetBytes(resp[0].Value.(hexutil.Bytes)[:32]), nil
 }
