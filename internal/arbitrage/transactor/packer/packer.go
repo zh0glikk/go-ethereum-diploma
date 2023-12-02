@@ -20,9 +20,9 @@ type Packer interface {
 		template string) ([]byte, error)
 
 	PackSwapV3Template(
-		pair common.Address,
 		input common.Address,
 		output common.Address,
+		pair common.Address,
 		contract common.Address,
 	) (string, error)
 }

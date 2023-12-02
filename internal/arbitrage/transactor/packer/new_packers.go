@@ -42,15 +42,15 @@ func (_ newPacker) PackSwapV3(
 }
 
 func (_ newPacker) PackSwapV3Template(
-	pair common.Address,
 	input common.Address,
 	output common.Address,
+	pair common.Address,
 	contract common.Address,
 ) (string, error) {
 	tmpl := hex.EncodeToString(bytes.Join([][]byte{
-		encodeAddress(pair.Bytes()),
 		encodeAddress(input.Bytes()),
 		encodeAddress(output.Bytes()),
+		encodeAddress(pair.Bytes()),
 		encodeUint256(zero),
 		encodeAddress(contract.Bytes()),
 	}, nil))

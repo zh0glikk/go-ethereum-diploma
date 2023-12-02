@@ -47,7 +47,7 @@ func (i *SwapTransactor) PrepareTemplates(data *simulation_models.PrepareTemplat
 		log.Info(fmt.Sprintf("packing swapV2 input template: %s", i.purchaseTemplate))
 
 	} else {
-		i.purchaseTemplate, err = packer.PackerObj.PackSwapV3Template(data.InputPair, data.InputToken, data.OutputToken, data.Contract)
+		i.purchaseTemplate, err = packer.PackerObj.PackSwapV3Template(data.InputToken, data.OutputToken, data.InputPair, data.Contract)
 		if err != nil {
 			return err
 		}
@@ -63,7 +63,7 @@ func (i *SwapTransactor) PrepareTemplates(data *simulation_models.PrepareTemplat
 		log.Info(fmt.Sprintf("packing swapV2 output template: %s", i.sellTemplate))
 
 	} else {
-		i.sellTemplate, err = packer.PackerObj.PackSwapV3Template(data.OutputPair, data.OutputToken, data.InputToken, data.Contract)
+		i.sellTemplate, err = packer.PackerObj.PackSwapV3Template(data.OutputToken, data.InputToken, data.OutputPair, data.Contract)
 		if err != nil {
 			return err
 		}
