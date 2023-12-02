@@ -8,16 +8,16 @@ curl http://localhost:8543/ \
 -H "Content-Type: application/json" \
 -d '{
    "jsonrpc":"2.0",
-   "method":"eth_sandwich",
+   "method":"eth_executeSwaps",
    "params":[
       {
          "contract":"0x00000000500e2fece27a7600435d0C48d64E0C00",
          "input":"0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
          "output":"0xdAC17F958D2ee523a2206206994597C13D831ec7",
          "input_pair":"0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852",
-         "input_pair_type": 2,
+         "input_pair_version": 2,
          "output_pair":"0x11b815efb8f581194ae79006d24e0d814b7697f6",
-         "output_pair_type": 3,
+         "output_pair_version": 3,
          "transactions":[
             
          ],

@@ -1,9 +1,11 @@
 package implementations
 
 import (
+	"fmt"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/transactor/packer"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/transactor/protocol"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/transactor/simulation_models"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 type SwapTransactor struct {
@@ -33,6 +35,10 @@ func (i *SwapTransactor) PrepareTemplates(data *simulation_models.PrepareTemplat
 	i.purchaseType = data.InputPairVersion
 	i.sellType = data.OutputPairVersion
 
+	log.Info(fmt.Sprintf("data.InputPairVersion: %d", data.InputPairVersion))
+	log.Info(fmt.Sprintf("data.OutputPairVersion: %d", data.OutputPairVersion))
+
+	log.Info(fmt.Sprintf("%s %s %s %s", data.InputPair.String(), data.OutputPair.String(), data.InputToken.String(), data.OutputToken.String()))
 	if data.InputPairVersion == 2 {
 		i.purchaseTemplate, err = packer.PackerObj.PackSwapV2Template(data.InputPair, data.InputToken, data.OutputToken)
 		if err != nil {

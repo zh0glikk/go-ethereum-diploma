@@ -41,6 +41,8 @@ func ExecuteSwaps(
 
 	applyContractCode(stateOverride, request.Contract, request.SimulationCode)
 
+	log.Info(fmt.Sprintf("%s", request.SimulationCode))
+
 	victimExecution, stateDB, header, vmctx, err := prepareSwapInitial(
 		ctx,
 		b,
