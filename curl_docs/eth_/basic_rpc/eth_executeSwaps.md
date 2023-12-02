@@ -21,6 +21,11 @@ curl http://localhost:8543/ \
          "transactions":[
             
          ],
+         "points": [
+             500000000000000000,
+             1000000000000000000,
+             1500000000000000000
+         ],
          "maxDepth": 1,
          "maxBruteTime" : 500,
          "splitParam" : 10,

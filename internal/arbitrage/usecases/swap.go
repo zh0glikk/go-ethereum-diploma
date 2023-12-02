@@ -150,7 +150,7 @@ func simulateSwaps(
 
 	resultExecution := append(executionFront, executionBack...)
 
-	outputAmountSell, err := unpacker.UnpackerObj.ParseOutputAmount(executionFront)
+	outputAmountSell, err := unpacker.UnpackerObj.ParseOutputAmount(executionBack)
 	if err != nil {
 		return resultExecution, big.NewInt(0)
 	}
