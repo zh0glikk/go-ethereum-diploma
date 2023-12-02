@@ -15,7 +15,7 @@ func convertCallManyResult(result *core.ExecutionResult) (models.CallManyRespons
 	revert := result.Revert()
 	if len(revert) > 0 {
 		resp = models.CallManyResponseDTO{
-			Error: models.NewRevertError(result).ErrorData(),
+			Error: models.NewRevertErrorWithDecoding(result).ErrorData(),
 		}
 		return resp, false
 	}
