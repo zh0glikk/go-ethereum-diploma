@@ -96,25 +96,24 @@ func prepareSwapsTransactions(
 	contract common.Address,
 ) []ethapi.TransactionArgs {
 	var transactions []ethapi.TransactionArgs
-
 	purchaseBB, _ := transactor.PackPurchase(frontDTO)
 	if len(purchaseBB) != 0 {
+		log.Info(fmt.Sprintf("purchase: %s", hexutil.Encode(purchaseBB)))
+
 		transactions = append(transactions, ethapi.TransactionArgs{
 			To:   &contract,
 			Data: utils.Ptr(hexutil.Bytes(purchaseBB)),
 		})
 	}
 
-	// can be used in triplet if we dont want to apply sell for state
 	sellBB, _ := transactor.PackSell(backDTO)
 	if len(sellBB) != 0 {
+		log.Info(fmt.Sprintf("sell: %s", hexutil.Encode(sellBB)))
 		transactions = append(transactions, ethapi.TransactionArgs{
 			To:   &contract,
 			Data: utils.Ptr(hexutil.Bytes(sellBB)),
 		})
 	}
-
-	log.Info(fmt.Sprintf("front: %s\nback: %s", hexutil.Encode(purchaseBB), hexutil.Encode(sellBB)))
 
 	return transactions
 }

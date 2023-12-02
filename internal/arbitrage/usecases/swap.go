@@ -39,9 +39,8 @@ func ExecuteSwaps(
 	worker := algo.NewWorker(algo.WorkerSettings{})
 	transactor := transact.NewTransactor()
 
+	log.Info(fmt.Sprintf("%s", request.Contract))
 	applyContractCode(stateOverride, request.Contract, request.SimulationCode)
-
-	log.Info(fmt.Sprintf("%s", request.SimulationCode))
 
 	victimExecution, stateDB, header, vmctx, err := prepareSwapInitial(
 		ctx,
@@ -105,7 +104,7 @@ func simulateSwaps(
 	header *types.Header,
 	vmctx vm.BlockContext,
 ) ([]models.CallManyResponseDTO, *big.Int) {
-	executionFront, _, _, stateDB, _, _, err := applySwaps(
+	executionFront, _, _, stateDb, _, _, err := applySwaps(
 		ctx,
 		b,
 		&simulation_models.PackFrontDTO{
@@ -139,7 +138,7 @@ func simulateSwaps(
 		},
 		transactor,
 		contract,
-		stateDB,
+		stateDb,
 		header,
 		vmctx,
 		0,
