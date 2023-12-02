@@ -69,8 +69,8 @@ func ExecuteSwaps(
 				value,
 				transactor,
 				request.Pairs,
-				request.Contract,
 				request.InputToken,
+				request.Contract,
 				stateDB.Copy(), // required option .Copy()!!!!!
 				header,
 				vmctx,
