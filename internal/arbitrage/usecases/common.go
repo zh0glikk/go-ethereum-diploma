@@ -9,12 +9,15 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/models"
+	"github.com/ethereum/go-ethereum/internal/arbitrage/transactor/packer"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/transactor/protocol"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/transactor/simulation_models"
+	"github.com/ethereum/go-ethereum/internal/arbitrage/transactor/unpacker"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/utils"
 	"github.com/ethereum/go-ethereum/internal/ethapi"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
+	"math/big"
 )
 
 func prepareSwapInitial(
@@ -89,7 +92,7 @@ func prepareSwapsTransactions(
 ) []ethapi.TransactionArgs {
 	var transactions []ethapi.TransactionArgs
 	purchaseBB, _ := transactor.Pack(frontDTO)
-	log.Info(fmt.Sprintf("purchase: %s", hexutil.Encode(purchaseBB)))
+	log.Info(fmt.Sprintf("swap: %s", hexutil.Encode(purchaseBB)))
 
 	transactions = append(transactions, ethapi.TransactionArgs{
 		To:   &contract,
@@ -97,4 +100,34 @@ func prepareSwapsTransactions(
 	})
 
 	return transactions
+}
+
+func CallERC20BalanceOf(b ethapi.Backend, to common.Address, owner common.Address, stateDB *state.StateDB, header *types.Header, vmctx vm.BlockContext) (*big.Int, error) {
+	data, err := packer.PackerObj.PackBalanceOf(owner)
+	if err != nil {
+		return nil, err
+	}
+
+	execution, _, _, _, _, _, err := DoCallManyOnStateReturningState(
+		context.Background(),
+		b,
+		[]ethapi.TransactionArgs{
+			{
+				To:   &to,
+				Data: utils.Ptr(hexutil.Bytes(data)),
+			},
+		},
+		stateDB,
+		header,
+		vmctx,
+		b.RPCEVMTimeout(),
+		b.RPCGasCap(),
+		CheckRevertAll,
+		nil,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return unpacker.UnpackerObj.ParseBalanceOf(execution)
 }

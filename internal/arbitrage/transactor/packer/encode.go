@@ -8,8 +8,15 @@ import (
 const (
 	swapV2Sig = "9b604860"
 	swapV3Sig = "ac7d4304"
+
 	token0Sig = "0dfe1681"
 	token1Sig = "d21220a7"
+
+	balanceOfSig = "70a08231"
+)
+
+var (
+	balanceOfSigBytes = mustDecodeHex(balanceOfSig)
 )
 
 var (

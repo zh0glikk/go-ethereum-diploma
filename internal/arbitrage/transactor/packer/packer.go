@@ -26,6 +26,10 @@ type Packer interface {
 		contract common.Address,
 	) (string, error)
 
+	PackBalanceOf(
+		address common.Address,
+	) ([]byte, error)
+
 	PackToken0() ([]byte, error)
 	PackToken1() ([]byte, error)
 }
