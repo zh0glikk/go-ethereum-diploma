@@ -8,7 +8,11 @@ import (
 )
 
 type SwapBundle struct {
-	SwapContractParams
+	Pairs []SwapContractParams `json:"pairs"`
+
+	InputToken common.Address `json:"input_token"`
+	Contract   common.Address `json:"contract"`
+
 	AlgoCommon
 
 	Transactions   []ethapi.TransactionArgs `json:"transactions"`
@@ -16,14 +20,8 @@ type SwapBundle struct {
 }
 
 type SwapContractParams struct {
-	InputPair         common.Address `json:"input_pair"`
-	InputPairVersion  int            `json:"input_pair_version"`
-	OutputPair        common.Address `json:"output_pair"`
-	OutputPairVersion int            `json:"output_pair_version"`
-
-	InputToken  common.Address `json:"input_token"`
-	OutputToken common.Address `json:"output_token"`
-	Contract    common.Address `json:"contract"`
+	Pair        common.Address `json:"pair"`
+	PairVersion int            `json:"pair_version"`
 }
 
 type AlgoCommon struct {
@@ -40,6 +38,4 @@ type SwapResponse struct {
 	Reason       string                `json:"reason"`
 	Duration     int64                 `json:"duration_dbg"`
 	Execution    []CallManyResponseDTO `json:"execution"`
-	// GasInfo         map[string]*big.Int   `json:"gas_info,omitempty"`
-	// Optimized       *bool                 `json:"optimized,omitempty"`
 }

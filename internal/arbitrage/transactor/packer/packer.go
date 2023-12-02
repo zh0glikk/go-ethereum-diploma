@@ -25,6 +25,9 @@ type Packer interface {
 		pair common.Address,
 		contract common.Address,
 	) (string, error)
+
+	PackToken0() ([]byte, error)
+	PackToken1() ([]byte, error)
 }
 
 func NewPacker() Packer {

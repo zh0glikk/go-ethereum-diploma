@@ -18,7 +18,12 @@ type PrepareTemplatesDTO struct {
 }
 
 type PackFrontDTO struct {
-	Value *big.Int
+	Value    *big.Int
+	Pair     common.Address
+	Input    common.Address
+	Output   common.Address
+	Contract common.Address
+	PairType int
 }
 
 type PackBackDTO struct {

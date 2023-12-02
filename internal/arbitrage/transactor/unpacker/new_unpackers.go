@@ -59,6 +59,14 @@ func (_ newUnpacker) ParseGetPair(resp []models.CallManyResponseDTO) (common.Add
 	return common.BytesToAddress(resp[0].Value.(hexutil.Bytes)[:32]), nil
 }
 
+func (_ newUnpacker) ParseAddress(resp []models.CallManyResponseDTO) (common.Address, error) {
+	if resp[0].Value == nil {
+		return common.Address{}, errors.New("parse addr failed")
+	}
+
+	return common.BytesToAddress(resp[0].Value.(hexutil.Bytes)[:32]), nil
+}
+
 func (_ newUnpacker) ParseGetAmountOutput(resp []models.CallManyResponseDTO) (*big.Int, error) {
 	if len(resp) == 0 {
 		return big.NewInt(0), nil

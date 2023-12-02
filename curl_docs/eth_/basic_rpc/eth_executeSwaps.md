@@ -11,13 +11,18 @@ curl http://localhost:8543/ \
    "method":"eth_executeSwaps",
    "params":[
       {
-         "contract":"0xc11ce44147c9f6149Fbe54ADb0588523c38718d7",
          "input_token":"0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-         "output_token":"0x1a7e4e63778B4f12a199C062f3eFdD288afCBce8",
-         "output_pair":"0x1f4c763bde1d4832b3ea0640e66da00b98831355",
-         "input_pair":"0x8db1b906d47dfc1d84a87fc49bd0522e285b98b9",
-         "input_pair_version": 3,
-         "output_pair_version": 3,
+         "contract":"0xc11ce44147c9f6149Fbe54ADb0588523c38718d7",
+         "pairs": [
+             {
+                  "pair": "0x8db1b906d47dfc1d84a87fc49bd0522e285b98b9",
+                  "pair_version": 3,
+             }, 
+             {
+                  "pair": "0x1f4c763bde1d4832b3ea0640e66da00b98831355",
+                  "pair_version": 3,
+             }
+         ],
          "transactions":[
 
           ],

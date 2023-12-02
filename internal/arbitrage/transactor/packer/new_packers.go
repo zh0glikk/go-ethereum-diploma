@@ -57,3 +57,11 @@ func (_ newPacker) PackSwapV3Template(
 
 	return swapV3Sig + "%s" + tmpl, nil
 }
+
+func (_ newPacker) PackToken0() ([]byte, error) {
+	return mustDecodeHex(fmt.Sprintf("%s", token0Sig)), nil
+}
+
+func (_ newPacker) PackToken1() ([]byte, error) {
+	return mustDecodeHex(fmt.Sprintf("%s", token1Sig)), nil
+}

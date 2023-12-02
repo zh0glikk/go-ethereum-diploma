@@ -20,8 +20,6 @@ import (
 func prepareSwapInitial(
 	ctx context.Context,
 	b ethapi.Backend,
-	transactor protocol.Transactor,
-	params simulation_models.PrepareTemplatesDTO,
 	victim []ethapi.TransactionArgs,
 	stateOverride *ethapi.StateOverride,
 	blockNrOrHash rpc.BlockNumberOrHash,
@@ -32,11 +30,6 @@ func prepareSwapInitial(
 	header *types.Header,
 	vmctx vm.BlockContext,
 	err error) {
-
-	err = transactor.PrepareTemplates(&params)
-	if err != nil {
-		return
-	}
 
 	// on this step we apply overrides and execute prebundle transactions
 	prebundleExecution, stateDB, header, vmctx, err = DoCallManyReturningState(
@@ -56,11 +49,10 @@ func prepareSwapInitial(
 	return
 }
 
-func applySwaps(
+func applySwap(
 	ctx context.Context,
 	b ethapi.Backend,
-	frontDTO *simulation_models.PackFrontDTO,
-	backDTO *simulation_models.PackBackDTO,
+	data *simulation_models.PackFrontDTO,
 	transactor protocol.Transactor,
 	contract common.Address,
 	stateDB *state.StateDB,
@@ -69,8 +61,7 @@ func applySwaps(
 	checkRevertIndex int,
 ) ([]models.CallManyResponseDTO, bool, []uint64, *state.StateDB, *types.Header, vm.BlockContext, error) {
 	newTransactions := prepareSwapsTransactions(
-		frontDTO,
-		backDTO,
+		data,
 		transactor,
 		contract,
 	)
@@ -91,12 +82,11 @@ func applySwaps(
 
 func prepareSwapsTransactions(
 	frontDTO *simulation_models.PackFrontDTO,
-	backDTO *simulation_models.PackBackDTO,
 	transactor protocol.Transactor,
 	contract common.Address,
 ) []ethapi.TransactionArgs {
 	var transactions []ethapi.TransactionArgs
-	purchaseBB, _ := transactor.PackPurchase(frontDTO)
+	purchaseBB, _ := transactor.Pack(frontDTO)
 	if len(purchaseBB) != 0 {
 		log.Info(fmt.Sprintf("purchase: %s", hexutil.Encode(purchaseBB)))
 
@@ -105,17 +95,6 @@ func prepareSwapsTransactions(
 			Data: utils.Ptr(hexutil.Bytes(purchaseBB)),
 		})
 	}
-
-	sellBB, _ := transactor.PackSell(backDTO)
-	if len(sellBB) != 0 {
-		log.Info(fmt.Sprintf("sell: %s", hexutil.Encode(sellBB)))
-		transactions = append(transactions, ethapi.TransactionArgs{
-			To:   &contract,
-			Data: utils.Ptr(hexutil.Bytes(sellBB)),
-		})
-	}
-
-	log.Info(fmt.Sprintf("%v", transactions))
 
 	return transactions
 }

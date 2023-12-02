@@ -7,8 +7,8 @@ import (
 type Transactor interface {
 	New() Transactor
 
-	PrepareTemplates(data *simulation_models.PrepareTemplatesDTO) error
+	// PrepareTemplates(data *simulation_models.PrepareTemplatesDTO) error
 
-	PackPurchase(data *simulation_models.PackFrontDTO) ([]byte, error)
-	PackSell(data *simulation_models.PackBackDTO) ([]byte, error)
+	Pack(data *simulation_models.PackFrontDTO) ([]byte, error)
+	// PackSell(data *simulation_models.PackBackDTO) ([]byte, error)
 }

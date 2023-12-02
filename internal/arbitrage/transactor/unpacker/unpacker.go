@@ -13,6 +13,8 @@ type Unpacker interface {
 	ParseBalanceOf(resp []models.CallManyResponseDTO) (*big.Int, error)
 	ParseFee(resp []models.CallManyResponseDTO) (*big.Int, error)
 	ParseGetPair(resp []models.CallManyResponseDTO) (common.Address, error)
+	ParseAddress(resp []models.CallManyResponseDTO) (common.Address, error)
+
 	ParseFactory(resp []models.CallManyResponseDTO) (common.Address, error)
 	ParseGetPool(resp []models.CallManyResponseDTO) (common.Address, error)
 

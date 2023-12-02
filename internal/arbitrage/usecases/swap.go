@@ -45,16 +45,6 @@ func ExecuteSwaps(
 	victimExecution, stateDB, header, vmctx, err := prepareSwapInitial(
 		ctx,
 		b,
-		transactor,
-		simulation_models.PrepareTemplatesDTO{
-			InputPair:         request.InputPair,
-			InputPairVersion:  request.InputPairVersion,
-			OutputPair:        request.OutputPair,
-			OutputPairVersion: request.OutputPairVersion,
-			InputToken:        request.InputToken,
-			OutputToken:       request.OutputToken,
-			Contract:          request.Contract,
-		},
 		request.Transactions,
 		stateOverride,
 		blockNrOrHash,
@@ -78,7 +68,9 @@ func ExecuteSwaps(
 				b,
 				value,
 				transactor,
+				request.Pairs,
 				request.Contract,
+				request.InputToken,
 				stateDB.Copy(), // required option .Copy()!!!!!
 				header,
 				vmctx,
@@ -99,64 +91,73 @@ func simulateSwaps(
 	b ethapi.Backend,
 	value *big.Int,
 	transactor protocol.Transactor,
+	pairs []models.SwapContractParams,
+	input common.Address,
 	contract common.Address,
 	stateDB *state.StateDB,
 	header *types.Header,
 	vmctx vm.BlockContext,
 ) ([]models.CallManyResponseDTO, *big.Int) {
-	executionFront, _, _, stateDb, _, _, err := applySwaps(
-		ctx,
-		b,
-		&simulation_models.PackFrontDTO{
-			Value: value,
-		},
-		&simulation_models.PackBackDTO{},
-		transactor,
-		contract,
-		stateDB,
-		header,
-		vmctx,
-		0,
-	)
-	if err != nil {
-		return executionFront, big.NewInt(0)
+
+	var outputAmount *big.Int
+	var execution []models.CallManyResponseDTO
+
+	swapAmount := value
+	for _, pair := range pairs {
+		var executionTmp []models.CallManyResponseDTO
+
+		token0, err := CallToken0(b, pair.Pair, stateDB, header, vmctx)
+		if err != nil {
+			return execution, big.NewInt(0)
+		}
+		token1, err := CallToken1(b, pair.Pair, stateDB, header, vmctx)
+		if err != nil {
+			return execution, big.NewInt(0)
+		}
+
+		var output common.Address
+
+		if input == token0 {
+			output = token1
+		} else {
+			output = token0
+		}
+
+		log.Info(fmt.Sprintf("swap %s %s %s", pair.Pair.String(), input.String(), output.String()))
+		executionTmp, _, _, stateDB, _, _, err = applySwap(
+			ctx,
+			b,
+			&simulation_models.PackFrontDTO{
+				Value:    swapAmount,
+				Pair:     pair.Pair,
+				Input:    input,
+				Output:   output,
+				Contract: contract,
+				PairType: pair.PairVersion,
+			},
+			transactor,
+			contract,
+			stateDB,
+			header,
+			vmctx,
+			0,
+		)
+		execution = append(execution, executionTmp...)
+		if err != nil {
+			return execution, big.NewInt(0)
+		}
+
+		outputAmount, err = unpacker.UnpackerObj.ParseOutputAmount(executionTmp)
+		if err != nil {
+			return execution, big.NewInt(0)
+		}
+		swapAmount = outputAmount
+		log.Info(fmt.Sprintf("outputAmount: %s", outputAmount.String()))
+
+		input = output
 	}
 
-	outputAmountPurchase, err := unpacker.UnpackerObj.ParseOutputAmount(executionFront)
-	if err != nil {
-		return executionFront, big.NewInt(0)
-	}
+	profit := new(big.Int).Sub(outputAmount, value)
 
-	log.Info(fmt.Sprintf("outputAmountPurchase: %s", outputAmountPurchase.String()))
-
-	executionBack, _, _, _, _, _, err := applySwaps(
-		ctx,
-		b,
-		&simulation_models.PackFrontDTO{},
-		&simulation_models.PackBackDTO{
-			Value: outputAmountPurchase,
-		},
-		transactor,
-		contract,
-		stateDb,
-		header,
-		vmctx,
-		0,
-	)
-	if err != nil {
-		return executionFront, big.NewInt(0)
-	}
-
-	resultExecution := append(executionFront, executionBack...)
-
-	outputAmountSell, err := unpacker.UnpackerObj.ParseOutputAmount(executionBack)
-	if err != nil {
-		return resultExecution, big.NewInt(0)
-	}
-
-	log.Info(fmt.Sprintf("outputAmountSell: %s", outputAmountSell.String()))
-
-	profit := new(big.Int).Sub(outputAmountSell, value)
-
-	return resultExecution, profit
+	return execution, profit
 }
