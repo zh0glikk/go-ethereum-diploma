@@ -66,6 +66,8 @@ func applySwap(
 		contract,
 	)
 
+	log.Info(fmt.Sprintf("%v", newTransactions))
+
 	return DoCallManyOnStateReturningState(
 		ctx,
 		b,
@@ -87,14 +89,12 @@ func prepareSwapsTransactions(
 ) []ethapi.TransactionArgs {
 	var transactions []ethapi.TransactionArgs
 	purchaseBB, _ := transactor.Pack(frontDTO)
-	if len(purchaseBB) != 0 {
-		log.Info(fmt.Sprintf("purchase: %s", hexutil.Encode(purchaseBB)))
+	log.Info(fmt.Sprintf("purchase: %s", hexutil.Encode(purchaseBB)))
 
-		transactions = append(transactions, ethapi.TransactionArgs{
-			To:   &contract,
-			Data: utils.Ptr(hexutil.Bytes(purchaseBB)),
-		})
-	}
+	transactions = append(transactions, ethapi.TransactionArgs{
+		To:   &contract,
+		Data: utils.Ptr(hexutil.Bytes(purchaseBB)),
+	})
 
 	return transactions
 }
