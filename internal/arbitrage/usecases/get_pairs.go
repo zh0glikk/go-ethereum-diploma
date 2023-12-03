@@ -35,7 +35,7 @@ func GetPairs(
 			result = append(result, models.PairInfo{
 				Pair:    pairAddr,
 				Version: 2,
-				Factory: "univ2",
+				DEX:     "univ2",
 			})
 		}
 	}
@@ -48,7 +48,7 @@ func GetPairs(
 			result = append(result, models.PairInfo{
 				Pair:    pairAddr,
 				Version: 2,
-				Factory: "sushiv2",
+				DEX:     "sushiv2",
 			})
 		}
 	}
@@ -67,7 +67,7 @@ func GetPairs(
 				result = append(result, models.PairInfo{
 					Pair:    pairAddr,
 					Version: 3,
-					Factory: fmt.Sprintf("univ3_%s", fee.String()),
+					DEX:     fmt.Sprintf("univ3_%s", fee.String()),
 				})
 			}
 		}

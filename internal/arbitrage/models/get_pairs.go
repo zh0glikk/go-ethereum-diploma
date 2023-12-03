@@ -10,5 +10,5 @@ type GetPairsRequest struct {
 type PairInfo struct {
 	Pair    common.Address `json:"pair"`
 	Version int            `json:"pair_version"`
-	Factory string         `json:"factory"` // for debug
+	DEX     string         `json:"dex"` // for debug
 }
