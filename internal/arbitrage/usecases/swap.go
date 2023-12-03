@@ -154,10 +154,18 @@ func simulateSwaps(
 			return execution, big.NewInt(0)
 		}
 
-		outputAmount, err = unpacker.UnpackerObj.ParseOutputAmount(executionTmp)
-		if err != nil {
-			return execution, big.NewInt(0)
+		if pair.PairVersion == 2 {
+			outputAmount, err = unpacker.UnpackerObj.ParseOutputAmount(executionTmp)
+			if err != nil {
+				return execution, big.NewInt(0)
+			}
+		} else {
+			outputAmount, err = unpacker.UnpackerObj.ParseOutputAmount3(executionTmp)
+			if err != nil {
+				return execution, big.NewInt(0)
+			}
 		}
+
 		swapAmount = outputAmount
 		log.Info(fmt.Sprintf("outputAmount: %s", outputAmount.String()))
 

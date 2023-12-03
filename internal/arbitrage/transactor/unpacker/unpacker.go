@@ -8,6 +8,7 @@ import (
 
 type Unpacker interface {
 	ParseOutputAmount(resp []models.CallManyResponseDTO) (*big.Int, error)
+	ParseOutputAmount3(resp []models.CallManyResponseDTO) (*big.Int, error)
 
 	ParseSqrtPriceLimit(resp []models.CallManyResponseDTO, tx TxType) (*big.Int, error)
 	ParseBalanceOf(resp []models.CallManyResponseDTO) (*big.Int, error)

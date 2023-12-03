@@ -52,6 +52,15 @@ func (_ newUnpacker) ParseOutputAmount(resp []models.CallManyResponseDTO) (*big.
 	return new(big.Int).SetBytes(resp[0].Value.(hexutil.Bytes)[:32]), nil
 }
 
+func (_ newUnpacker) ParseOutputAmount3(resp []models.CallManyResponseDTO) (*big.Int, error) {
+	if resp[0].Value == nil || resp[0].Error != nil || len(resp[0].Value.(hexutil.Bytes)) == 0 {
+		log.Info(fmt.Sprintf("%v", resp))
+		return nil, errors.New("ParseOutputAmount failed")
+	}
+
+	return new(big.Int).SetBytes(resp[0].Value.(hexutil.Bytes)[32:64]), nil
+}
+
 func (_ newUnpacker) ParseGetPair(resp []models.CallManyResponseDTO) (common.Address, error) {
 	if resp[0].Value == nil {
 		return common.Address{}, errors.New("getPair failed")
