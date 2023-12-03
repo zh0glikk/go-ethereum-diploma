@@ -5,15 +5,17 @@ import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/models"
 	"github.com/ethereum/go-ethereum/log"
+	"math"
 	"math/big"
 	"time"
 )
 
 const (
-	defaultMaxBruteTime = 5000 * time.Millisecond
-	subWorkersCount     = 100
-	iterationsLimit     = 20
-	DefaultSplitParam   = 10
+	defaultMaxBruteTime   = 5000 * time.Millisecond
+	subWorkersCount       = 100
+	iterationsLimit       = 20
+	DefaultSplitParam     = 10
+	significantBytesCount = 5
 )
 
 var (
@@ -226,4 +228,22 @@ func (w *Worker) prepareInitialParams(extraData InitialExtraData) {
 	if extraData.MaxBruteTime != 0 {
 		w.maxBruteTime = time.Duration(extraData.MaxBruteTime) * time.Millisecond
 	}
+}
+
+func RoundPoint(point *big.Int) *big.Int {
+	if point.Cmp(big.NewInt(0)) == 0 {
+		return point
+	}
+
+	pointF, _ := new(big.Float).SetInt(point).Float64()
+
+	k := math.Ceil(math.Log2(pointF) / 8)
+	y := k - significantBytesCount
+	multiplierF, _ := big.NewFloat(math.Pow(256, y)).Float64()
+	res := math.Floor(pointF/multiplierF) * multiplierF
+
+	value := new(big.Int)
+	_, _ = new(big.Float).SetFloat64(res).Int(value)
+
+	return value
 }

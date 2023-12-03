@@ -16,6 +16,9 @@ func defaultGasUsageFunc(inputAmount *big.Int, execution []models.CallManyRespon
 }
 
 type WorkerSettings struct {
+	// DisableFirstPointCheck bool
+	// DisableMinProfitCheck  bool
+	// DisablePointRounding   bool // rounded first 5 byte
 }
 
 type InitialExtraData struct {
@@ -23,6 +26,7 @@ type InitialExtraData struct {
 	MaxBruteTime int64
 	Points       []*big.Int
 	SplitParam   *big.Int
+	GasUsageF    *GasUsageFunc
 }
 
 type SubWorkerJob struct {
