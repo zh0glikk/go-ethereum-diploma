@@ -50,16 +50,16 @@ func GetPairs(
 	}
 
 	for _, fee := range []*big.Int{
-		big.NewInt(1000),
+		big.NewInt(100),
+		big.NewInt(500),
 		big.NewInt(3000),
-		big.NewInt(5000),
 		big.NewInt(10000),
 	} {
 		pairAddr, err = CallGetPool(ctx, b, request.Token0, request.Token1, fee, state, header, vmctx)
 		if err == nil {
 			result = append(result, models.PairInfo{
 				Pair:    pairAddr,
-				Version: 2,
+				Version: 3,
 				Factory: fmt.Sprintf("univ3_%s", fee.String()),
 			})
 		} else {
