@@ -28,25 +28,29 @@ func GetPairs(
 	var result []models.PairInfo
 
 	pairAddr, err := CallGetPair(ctx, b, uniSwapV2FactoryAddr, request.Token0, request.Token1, state, header, vmctx)
-	if err == nil {
-		result = append(result, models.PairInfo{
-			Pair:    pairAddr,
-			Version: 2,
-			Factory: "univ2",
-		})
-	} else {
+	if err != nil {
 		log.Info(fmt.Sprintf("%s", err.Error()))
+	} else {
+		if len(pairAddr.Bytes()) > 0 {
+			result = append(result, models.PairInfo{
+				Pair:    pairAddr,
+				Version: 2,
+				Factory: "univ2",
+			})
+		}
 	}
 
 	pairAddr, err = CallGetPair(ctx, b, uniSwapV2FactoryAddr, request.Token0, request.Token1, state, header, vmctx)
-	if err == nil {
-		result = append(result, models.PairInfo{
-			Pair:    pairAddr,
-			Version: 2,
-			Factory: "sushiv2",
-		})
-	} else {
+	if err != nil {
 		log.Info(fmt.Sprintf("%s", err.Error()))
+	} else {
+		if len(pairAddr.Bytes()) > 0 {
+			result = append(result, models.PairInfo{
+				Pair:    pairAddr,
+				Version: 2,
+				Factory: "sushiv2",
+			})
+		}
 	}
 
 	for _, fee := range []*big.Int{
@@ -56,14 +60,16 @@ func GetPairs(
 		big.NewInt(10000),
 	} {
 		pairAddr, err = CallGetPool(ctx, b, request.Token0, request.Token1, fee, state, header, vmctx)
-		if err == nil {
-			result = append(result, models.PairInfo{
-				Pair:    pairAddr,
-				Version: 3,
-				Factory: fmt.Sprintf("univ3_%s", fee.String()),
-			})
-		} else {
+		if err != nil {
 			log.Info(fmt.Sprintf("%s", err.Error()))
+		} else {
+			if len(pairAddr.Bytes()) > 0 {
+				result = append(result, models.PairInfo{
+					Pair:    pairAddr,
+					Version: 3,
+					Factory: fmt.Sprintf("univ3_%s", fee.String()),
+				})
+			}
 		}
 	}
 
