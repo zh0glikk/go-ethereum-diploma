@@ -131,3 +131,118 @@ func CallERC20BalanceOf(b ethapi.Backend, to common.Address, owner common.Addres
 
 	return unpacker.UnpackerObj.ParseBalanceOf(execution)
 }
+
+func CallPairFee(ctx context.Context, b ethapi.Backend, pair common.Address, stateDB *state.StateDB, header *types.Header, vmctx vm.BlockContext) (*big.Int, error) {
+	data, err := packer.PackerObj.PackFee(pair)
+	if err != nil {
+		return nil, err
+	}
+	execution, _, _, _, _, _, err := DoCallManyOnStateReturningState(
+		ctx,
+		b,
+		[]ethapi.TransactionArgs{
+			{
+				To:   &pair,
+				Data: utils.Ptr(hexutil.Bytes(data)),
+			},
+		},
+		stateDB,
+		header,
+		vmctx,
+		b.RPCEVMTimeout(),
+		b.RPCGasCap(),
+		CheckRevertAll,
+		nil,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return unpacker.UnpackerObj.ParseFee(execution)
+}
+
+func CallFactory(ctx context.Context, b ethapi.Backend, pair common.Address, stateDB *state.StateDB, header *types.Header, vmctx vm.BlockContext) (common.Address, error) {
+	data, err := packer.PackerObj.PackFactory(pair)
+	if err != nil {
+		return common.Address{}, err
+	}
+	execution, _, _, _, _, _, err := DoCallManyOnStateReturningState(
+		ctx,
+		b,
+		[]ethapi.TransactionArgs{
+			{
+				To:   &pair,
+				Data: utils.Ptr(hexutil.Bytes(data)),
+			},
+		},
+		stateDB,
+		header,
+		vmctx,
+		b.RPCEVMTimeout(),
+		b.RPCGasCap(),
+		CheckRevertAll,
+		nil,
+	)
+	if err != nil {
+		return common.Address{}, err
+	}
+
+	return unpacker.UnpackerObj.ParseFactory(execution)
+}
+
+func CallGetPair(ctx context.Context, b ethapi.Backend, factory common.Address, token0 common.Address, token1 common.Address, stateDB *state.StateDB, header *types.Header, vmctx vm.BlockContext) (common.Address, error) {
+	data, err := packer.PackerObj.PackGetPair(token0, token1)
+	if err != nil {
+		return common.Address{}, err
+	}
+	execution, _, _, _, _, _, err := DoCallManyOnStateReturningState(
+		ctx,
+		b,
+		[]ethapi.TransactionArgs{
+			{
+				To:   utils.Ptr(factory),
+				Data: utils.Ptr(hexutil.Bytes(data)),
+			},
+		},
+		stateDB,
+		header,
+		vmctx,
+		b.RPCEVMTimeout(),
+		b.RPCGasCap(),
+		CheckRevertAll,
+		nil,
+	)
+	if err != nil {
+		return common.Address{}, err
+	}
+
+	return unpacker.UnpackerObj.ParseGetPair(execution)
+}
+
+func CallGetPool(ctx context.Context, b ethapi.Backend, token0 common.Address, token1 common.Address, fee *big.Int, stateDB *state.StateDB, header *types.Header, vmctx vm.BlockContext) (common.Address, error) {
+	data, err := packer.PackerObj.PackGetPool(token0, token1, fee)
+	if err != nil {
+		return common.Address{}, err
+	}
+	execution, _, _, _, _, _, err := DoCallManyOnStateReturningState(
+		ctx,
+		b,
+		[]ethapi.TransactionArgs{
+			{
+				To:   utils.Ptr(uniSwapV3FactoryAddr),
+				Data: utils.Ptr(hexutil.Bytes(data)),
+			},
+		},
+		stateDB,
+		header,
+		vmctx,
+		b.RPCEVMTimeout(),
+		b.RPCGasCap(),
+		CheckRevertAll,
+		nil,
+	)
+	if err != nil {
+		return common.Address{}, err
+	}
+	return unpacker.UnpackerObj.ParseGetPool(execution)
+}

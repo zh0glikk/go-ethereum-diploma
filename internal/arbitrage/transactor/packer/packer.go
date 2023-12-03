@@ -32,6 +32,18 @@ type Packer interface {
 
 	PackToken0() ([]byte, error)
 	PackToken1() ([]byte, error)
+
+	PackGetPair(
+		token0 common.Address,
+		token1 common.Address,
+	) ([]byte, error)
+
+	PackGetPool(token0 common.Address, token1 common.Address, fee *big.Int) ([]byte, error)
+	PackFactory(pair common.Address) ([]byte, error)
+
+	PackFee(
+		pair common.Address,
+	) ([]byte, error)
 }
 
 func NewPacker() Packer {

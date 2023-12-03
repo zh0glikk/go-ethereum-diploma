@@ -75,3 +75,33 @@ func (_ newPacker) PackToken0() ([]byte, error) {
 func (_ newPacker) PackToken1() ([]byte, error) {
 	return mustDecodeHex(fmt.Sprintf("%s", token1Sig)), nil
 }
+
+func (_ newPacker) PackFactory(pair common.Address) ([]byte, error) {
+	return bytes.Join([][]byte{factorySigBytes, encodeAddress(pair.Bytes())}, nil), nil
+}
+
+func (_ newPacker) PackGetPool(token0 common.Address, token1 common.Address, fee *big.Int) ([]byte, error) {
+	return bytes.Join([][]byte{getPoolSigBytes, encodeAddress(token0.Bytes()), encodeAddress(token1.Bytes()), leftPad32(fee.Bytes())}, nil), nil
+}
+
+func (_ newPacker) PackGetPair(
+	token0 common.Address,
+	token1 common.Address,
+) ([]byte, error) {
+	return bytes.Join(
+		[][]byte{
+			getPairSigBytes,
+			encodeAddress(token0.Bytes()),
+			encodeAddress(token1.Bytes()),
+		}, nil), nil
+}
+
+func (_ newPacker) PackFee(
+	pair common.Address,
+) ([]byte, error) {
+	return bytes.Join(
+		[][]byte{
+			feeSigBytes,
+			encodeAddress(pair.Bytes()),
+		}, nil), nil
+}

@@ -7,6 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/eth/tracers"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/models"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/transactor/unpacker"
+	"github.com/ethereum/go-ethereum/internal/arbitrage/utils"
 	"github.com/ethereum/go-ethereum/internal/ethapi"
 	"github.com/ethereum/go-ethereum/rpc"
 	"math/big"
@@ -83,19 +84,23 @@ func parseV2V3(traces []models.TransactionTrace) []models.SwapInfo {
 		}
 	}
 
+	if len(swaps) == 0 {
+		return swaps
+	}
+
 	for i := range swaps {
-		if len(transfersByTo[swaps[i].Pair]) == 0 && len(transfersByFrom[swaps[i].Pair]) == 0 {
+		if len(transfersByTo[swaps[i].Pair]) == 0 ||
+			len(transfersByFrom[swaps[i].Pair]) == 0 {
 			continue
 		}
-		swaps[i].Input = transfersByTo[swaps[i].Pair][0].Token
+
 		swaps[i].InputAmount = transfersByTo[swaps[i].Pair][0].Amount
-		if len(transfersByTo[swaps[i].Pair]) > 1 {
-			copy(transfersByTo[swaps[i].Pair][:], transfersByTo[swaps[i].Pair][1:])
-		}
+
+		swaps[i].Input = transfersByTo[swaps[i].Pair][0].Token
 		swaps[i].Output = transfersByFrom[swaps[i].Pair][0].Token
-		if len(transfersByFrom[swaps[i].Pair]) > 1 {
-			copy(transfersByFrom[swaps[i].Pair][:], transfersByFrom[swaps[i].Pair][1:])
-		}
+
+		utils.RemoveFromArray(transfersByTo[swaps[i].Pair], 0)
+		utils.RemoveFromArray(transfersByFrom[swaps[i].Pair], 0)
 	}
 
 	return swaps

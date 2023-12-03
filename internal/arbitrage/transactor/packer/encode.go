@@ -13,10 +13,19 @@ const (
 	token1Sig = "d21220a7"
 
 	balanceOfSig = "70a08231"
+
+	feeSig     = "ddca3f43"
+	getPairSig = "e6a43905"
+	factorySig = "c45a0155"
+	getPoolSig = "1698ee82"
 )
 
 var (
 	balanceOfSigBytes = mustDecodeHex(balanceOfSig)
+	factorySigBytes   = mustDecodeHex(factorySig)
+	getPoolSigBytes   = mustDecodeHex(getPoolSig)
+	getPairSigBytes   = mustDecodeHex(getPairSig)
+	feeSigBytes       = mustDecodeHex(feeSig)
 )
 
 var (

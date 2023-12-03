@@ -28,3 +28,7 @@ func (s *ArbitrageAPI) BatchCallMany(ctx context.Context, args [][]ethapi.Transa
 func (s *ArbitrageAPI) ExecuteSwaps(ctx context.Context, request models.SwapBundle, stateOverride *ethapi.StateOverride, blockNrOrHash rpc.BlockNumberOrHash, blockOverrides *ethapi.BlockOverrides) (*models.SwapResponse, error) {
 	return usecases.ExecuteSwaps(ctx, s.b, request, stateOverride, blockNrOrHash, blockOverrides)
 }
+
+func (s *ArbitrageAPI) GetPairs(ctx context.Context, request models.GetPairsRequest, stateOverride *ethapi.StateOverride, blockNrOrHash rpc.BlockNumberOrHash, blockOverrides *ethapi.BlockOverrides) ([]models.PairInfo, error) {
+	return usecases.GetPairs(ctx, s.b, request, stateOverride, blockNrOrHash, blockOverrides)
+}
