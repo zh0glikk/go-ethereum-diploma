@@ -18,11 +18,10 @@ const workersCount = 1
 type Simulator struct {
 	b ethapi.Backend
 
-	contractAddr             common.Address
-	initialSplitParam        *big.Int
-	minTokenBalance          *big.Int
-	additionalTvlTrackTokens []common.Address
-	wrapper                  *simulation_wrappers.Wrapper
+	contractAddr      common.Address
+	initialSplitParam *big.Int
+	minTokenBalance   *big.Int
+	wrapper           *simulation_wrappers.Wrapper
 
 	resultCh chan models.SimulationJobResponse
 }
@@ -34,17 +33,13 @@ func NewSimulator(
 	maxBruteTime int64,
 	splitParam *big.Int,
 	initialSplitParam *big.Int,
-	minTokenBalance *big.Int,
-	additionalTvlTrackTokens []common.Address,
 ) *Simulator {
 	return &Simulator{
-		b:                        b,
-		contractAddr:             contract,
-		initialSplitParam:        initialSplitParam,
-		minTokenBalance:          minTokenBalance,
-		additionalTvlTrackTokens: additionalTvlTrackTokens,
-		resultCh:                 make(chan models.SimulationJobResponse, 10),
-		wrapper:                  simulation_wrappers.NewWrapper(b, contract, maxDepth, maxBruteTime, splitParam),
+		b:                 b,
+		contractAddr:      contract,
+		initialSplitParam: initialSplitParam,
+		resultCh:          make(chan models.SimulationJobResponse, 10),
+		wrapper:           simulation_wrappers.NewWrapper(b, contract, maxDepth, maxBruteTime, splitParam),
 	}
 }
 

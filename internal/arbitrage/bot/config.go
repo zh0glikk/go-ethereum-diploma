@@ -15,7 +15,6 @@ import (
 	"github.com/ethereum/go-ethereum/internal/ethapi"
 	"math/big"
 	"strconv"
-	"strings"
 	"sync"
 )
 
@@ -36,14 +35,7 @@ type ServiceConfig struct {
 	splitParam        *big.Int
 	initialSplitParam *big.Int
 
-	// maxDepthSlippage          int
-	// maxBruteTimeSlippage      int64
-	// splitParamSlippage        *big.Int
-	// initialSplitParamSlippage *big.Int
-
-	contractAddress          common.Address
-	minTokenBalance          *big.Int
-	additionalTvlTrackTokens []common.Address
+	contractAddress common.Address
 
 	infuraEthClient *ethclient.Client
 }
@@ -103,28 +95,13 @@ func NewServiceConfig(eth *eth.Ethereum, ctx context.Context, wg *sync.WaitGroup
 	}
 	cfg.initialSplitParam = big.NewInt(initialSplitParam)
 
-	minTokenBalance, err := strconv.ParseInt(configger.Get("ARB_MIN_TOKEN_BALANCE"), 10, 64)
-	if err != nil {
-		return nil, errors.New("ARB_MIN_TOKEN_BALANCE not provided")
-	}
-	cfg.minTokenBalance = big.NewInt(minTokenBalance)
-
-	tokensSplitted := strings.Split(configger.Get("ARB_TVL_TRACK_TOKENS"), ",")
-	additionalTvlTrackTokens := []common.Address{}
-	for _, token := range tokensSplitted {
-		additionalTvlTrackTokens = append(additionalTvlTrackTokens, common.HexToAddress(token))
-	}
-	cfg.additionalTvlTrackTokens = additionalTvlTrackTokens
-
 	cfg.simulator = simulator.NewSimulator(
 		cfg.b,
 		cfg.contractAddress,
 		cfg.maxDepth,
 		cfg.maxBruteTime,
 		cfg.splitParam,
-		cfg.initialSplitParam,
-		cfg.minTokenBalance,
-		cfg.additionalTvlTrackTokens)
+		cfg.initialSplitParam)
 
 	return cfg, nil
 }
