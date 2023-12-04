@@ -197,6 +197,9 @@ func (w *Worker) Execute(
 			}
 		case res := <-w.workerChanResp:
 			close(w.finishSubWorkersCh)
+			if res.BestProfit.Cmp(big.NewInt(0)) == 0 {
+				res.Reason = "Failed due to zero profit"
+			}
 			return res
 		case newIteration := <-w.newIterationJob:
 			for ind, point := range newIteration.Points {
