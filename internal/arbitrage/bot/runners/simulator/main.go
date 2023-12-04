@@ -209,6 +209,8 @@ func (t *Simulator) processTransaction(ctx context.Context, job models.Simulatio
 		}
 	}
 
+	log.Info(fmt.Sprintf("simulation data len: %d", len(simulationData)))
+
 	var mostProfitableResult *models.SwapResponse
 	var mostProfitableData SimulationData
 

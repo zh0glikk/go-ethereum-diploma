@@ -316,10 +316,11 @@ func (s *Service) simulationWriter() {
 			}
 			log.Info(fmt.Sprintf("pairs: %s", tmp))
 
-			simulationJobs := []models.SimulationJob{}
+			// simulationJobs := []models.SimulationJob{}
 			for _, txsModel := range s.txsStorage.ListFiltered(job.Pairs) {
-				log.Info(fmt.Sprintf("selected: \npair: %s\nin: %s\nout: %s\n", txsModel.Pair.String(), txsModel.TxsIn.Hashes(), txsModel.TxsOut.Hashes()))
-				simulationJobs = append(simulationJobs, models.SimulationJob{
+				log.Info(fmt.Sprintf("selected: \npair: %s, token0: %s, token1: %s\nin: %s\nout: %s\n", txsModel.Pair.String(), txsModel.Token0.String(), txsModel.Token1.String(), txsModel.TxsIn.Hashes(), txsModel.TxsOut.Hashes()))
+
+				s.simulationJobs <- models.SimulationJob{
 					BlockNumberOrHash: job.BlockNumberOrHash,
 					BlockOverrides:    job.BlockOverrides,
 					Pair:              txsModel.Pair,
@@ -328,9 +329,9 @@ func (s *Service) simulationWriter() {
 					Token1:            txsModel.Token1,
 					TxsIn:             txsModel.TxsIn,
 					TxsOut:            txsModel.TxsOut,
-				})
+				}
+
 			}
-			// s.simulationJobs <- simulationJobs
 			log.Info(fmt.Sprintf("txsStorage count: %d", len(s.txsStorage.List())))
 
 		case <-s.cfg.ctx.Done():
