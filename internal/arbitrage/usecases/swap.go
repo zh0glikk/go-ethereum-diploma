@@ -123,13 +123,13 @@ func simulateSwaps(
 			output = token0
 		}
 
-		balance, err := CallERC20BalanceOf(b, input, contract, stateDB, header, vmctx)
-		if err != nil {
-			log.Info(fmt.Sprintf("%s", err.Error()))
-			return execution, big.NewInt(0)
-		}
+		// balance, err := CallERC20BalanceOf(b, input, contract, stateDB, header, vmctx)
+		// if err != nil {
+		// 	log.Info(fmt.Sprintf("%s", err.Error()))
+		// 	return execution, big.NewInt(0)
+		// }
 
-		log.Info(fmt.Sprintf("swap %s %s %s %d; inputBalance: %s", pair.Pair.String(), input.String(), output.String(), swapAmount.String(), balance.String()))
+		// log.Info(fmt.Sprintf("swap %s %s %s %d; inputBalance: %s", pair.Pair.String(), input.String(), output.String(), swapAmount.String(), balance.String()))
 
 		executionTmp, _, _, stateDB, _, _, err = applySwap(
 			ctx,
@@ -160,7 +160,7 @@ func simulateSwaps(
 		}
 
 		swapAmount = algo.RoundPoint(outputAmount)
-		log.Info(fmt.Sprintf("outputAmount: %s, rounded: %s", outputAmount.String(), swapAmount))
+		// log.Info(fmt.Sprintf("outputAmount: %s, rounded: %s", outputAmount.String(), swapAmount))
 
 		input = output
 	}

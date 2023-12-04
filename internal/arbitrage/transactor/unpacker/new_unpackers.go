@@ -70,7 +70,7 @@ func (_ newUnpacker) ParseGetPair(resp []models.CallManyResponseDTO) (common.Add
 }
 
 func (_ newUnpacker) ParseAddress(resp []models.CallManyResponseDTO) (common.Address, error) {
-	if resp[0].Value == nil {
+	if resp[0].Value == nil || len(resp[0].Value.(hexutil.Bytes)) < 32 {
 		return common.Address{}, errors.New("parse addr failed")
 	}
 

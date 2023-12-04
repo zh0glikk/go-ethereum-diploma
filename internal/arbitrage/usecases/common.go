@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"context"
-	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/state"
@@ -15,7 +14,6 @@ import (
 	"github.com/ethereum/go-ethereum/internal/arbitrage/transactor/unpacker"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/utils"
 	"github.com/ethereum/go-ethereum/internal/ethapi"
-	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
 	"math/big"
 )
@@ -69,7 +67,7 @@ func applySwap(
 		contract,
 	)
 
-	log.Info(fmt.Sprintf("%v", newTransactions))
+	// log.Info(fmt.Sprintf("%v", newTransactions))
 
 	return DoCallManyOnStateReturningState(
 		ctx,
@@ -92,7 +90,7 @@ func prepareSwapsTransactions(
 ) []ethapi.TransactionArgs {
 	var transactions []ethapi.TransactionArgs
 	purchaseBB, _ := transactor.Pack(frontDTO)
-	log.Info(fmt.Sprintf("swap: %s", hexutil.Encode(purchaseBB)))
+	// log.Info(fmt.Sprintf("swap: %s", hexutil.Encode(purchaseBB)))
 
 	transactions = append(transactions, ethapi.TransactionArgs{
 		To:   &contract,
