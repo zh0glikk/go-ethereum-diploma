@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/models"
 	"github.com/ethereum/go-ethereum/internal/ethapi"
 	"github.com/ethereum/go-ethereum/log"
@@ -31,7 +32,7 @@ func GetPairs(
 	if err != nil {
 		log.Info(fmt.Sprintf("%s", err.Error()))
 	} else {
-		if len(pairAddr.Bytes()) > 0 {
+		if pairAddr != common.HexToAddress("0x0") {
 			result = append(result, models.PairInfo{
 				Pair:    pairAddr,
 				Version: 2,
@@ -44,7 +45,7 @@ func GetPairs(
 	if err != nil {
 		log.Info(fmt.Sprintf("%s", err.Error()))
 	} else {
-		if len(pairAddr.Bytes()) > 0 {
+		if pairAddr != common.HexToAddress("0x0") {
 			result = append(result, models.PairInfo{
 				Pair:    pairAddr,
 				Version: 2,
@@ -63,7 +64,7 @@ func GetPairs(
 		if err != nil {
 			log.Info(fmt.Sprintf("%s", err.Error()))
 		} else {
-			if len(pairAddr.Bytes()) > 0 {
+			if pairAddr != common.HexToAddress("0x0") {
 				result = append(result, models.PairInfo{
 					Pair:    pairAddr,
 					Version: 3,

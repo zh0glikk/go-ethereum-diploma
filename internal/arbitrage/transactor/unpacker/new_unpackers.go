@@ -3,11 +3,9 @@ package unpacker
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/models"
-	"github.com/ethereum/go-ethereum/log"
 	"math/big"
 )
 
@@ -45,7 +43,7 @@ func (_ newUnpacker) ParseFee(resp []models.CallManyResponseDTO) (*big.Int, erro
 
 func (_ newUnpacker) ParseOutputAmount(resp []models.CallManyResponseDTO) (*big.Int, error) {
 	if resp[0].Value == nil || resp[0].Error != nil || len(resp[0].Value.(hexutil.Bytes)) == 0 {
-		log.Info(fmt.Sprintf("%v", resp))
+		// log.Info(fmt.Sprintf("%v", resp))
 		return nil, errors.New("ParseOutputAmount failed")
 	}
 
@@ -54,7 +52,7 @@ func (_ newUnpacker) ParseOutputAmount(resp []models.CallManyResponseDTO) (*big.
 
 func (_ newUnpacker) ParseOutputAmount3(resp []models.CallManyResponseDTO) (*big.Int, error) {
 	if resp[0].Value == nil || resp[0].Error != nil || len(resp[0].Value.(hexutil.Bytes)) == 0 {
-		log.Info(fmt.Sprintf("%v", resp))
+		// log.Info(fmt.Sprintf("%v", resp))
 		return nil, errors.New("ParseOutputAmount failed")
 	}
 
