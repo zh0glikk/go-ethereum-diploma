@@ -228,13 +228,15 @@ func (t *Simulator) processTransaction(ctx context.Context, job models.Simulatio
 			continue
 		}
 
+		log.Info(fmt.Sprintf("%v", data.Pairs))
+
 		pairsStr := ""
 		for _, pair := range data.Pairs {
 			pairsStr = fmt.Sprintf("%s_%d  ->", pair.Pair, pair.PairVersion)
 		}
 
 		data2print := fmt.Sprintf(
-			"path: %s\n "+
+			"__ITERATION LOG__ \n path: %s\n "+
 				"txs: %s\n"+
 				"amount: %s\n"+
 				"profit: %s\n"+
@@ -261,27 +263,29 @@ func (t *Simulator) processTransaction(ctx context.Context, job models.Simulatio
 		log.Info(data2print)
 	}
 
-	pairsStr := ""
-	for _, pair := range mostProfitableData.Pairs {
-		pairsStr = fmt.Sprintf("%s_%d  ->", pair.Pair, pair.PairVersion)
+	if mostProfitableResult != nil {
+		pairsStr := ""
+		for _, pair := range mostProfitableData.Pairs {
+			pairsStr = fmt.Sprintf("%s_%d  ->", pair.Pair, pair.PairVersion)
+		}
+
+		data2print := fmt.Sprintf(
+			"___MOST PROFITABLE___\n path: %s\n "+
+				"txs: %s\n"+
+				"amount: %s\n"+
+				"profit: %s\n"+
+				"duration: %d\n"+
+				"reason: %s\n",
+			pairsStr,
+			mostProfitableData.Txs.Hashes(),
+			mostProfitableResult.OptimalValue.String(),
+			mostProfitableResult.Profit.String(),
+			mostProfitableResult.Duration,
+			mostProfitableResult.Reason,
+		)
+
+		log.Info(data2print)
 	}
-
-	data2print := fmt.Sprintf(
-		"path: %s\n "+
-			"txs: %s\n"+
-			"amount: %s\n"+
-			"profit: %s\n"+
-			"duration: %d\n"+
-			"reason: %s\n",
-		pairsStr,
-		mostProfitableData.Txs.Hashes(),
-		mostProfitableResult.OptimalValue.String(),
-		mostProfitableResult.Profit.String(),
-		mostProfitableResult.Duration,
-		mostProfitableResult.Reason,
-	)
-
-	log.Info(data2print)
 
 	return &models.SimulationJobResponse{}, nil
 }
