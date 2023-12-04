@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/ethereum/go-ethereum/internal/arbitrage/models"
-	"github.com/ethereum/go-ethereum/log"
 	"math"
 	"math/big"
 	"time"
@@ -92,7 +91,7 @@ func (w *Worker) runJobManager() {
 				bestIndex = resp.Index
 			}
 
-			log.Info(fmt.Sprintf("tick: %d/%d point: %s profit: %s", subWorkersFinished, len(currentPoints), resp.Point.String(), resp.Profit.String()))
+			// log.Info(fmt.Sprintf("tick: %d/%d point: %s profit: %s", subWorkersFinished, len(currentPoints), resp.Point.String(), resp.Profit.String()))
 
 			// check that iteration finished
 			if subWorkersFinished == len(currentPoints) {

@@ -232,7 +232,7 @@ func (t *Simulator) processTransaction(ctx context.Context, job models.Simulatio
 
 		pairsStr := ""
 		for _, pair := range data.Pairs {
-			pairsStr = fmt.Sprintf("%s_%d  ->", pair.Pair, pair.PairVersion)
+			pairsStr += fmt.Sprintf("%s_%d  ->", pair.Pair, pair.PairVersion)
 		}
 
 		data2print := fmt.Sprintf(
@@ -266,7 +266,7 @@ func (t *Simulator) processTransaction(ctx context.Context, job models.Simulatio
 	if mostProfitableResult != nil {
 		pairsStr := ""
 		for _, pair := range mostProfitableData.Pairs {
-			pairsStr = fmt.Sprintf("%s_%d  ->", pair.Pair, pair.PairVersion)
+			pairsStr += fmt.Sprintf("%s_%d  ->", pair.Pair, pair.PairVersion)
 		}
 
 		data2print := fmt.Sprintf(
