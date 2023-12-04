@@ -16,7 +16,7 @@
 
 package flags
 
-import "github.com/urfave/cli/v2"
+import cli "github.com/urfave/cli/v2"
 
 const (
 	EthCategory        = "ETHEREUM"
@@ -36,6 +36,7 @@ const (
 	MetricsCategory    = "METRICS AND STATS"
 	MiscCategory       = "MISC"
 	DeprecatedCategory = "ALIASED (deprecated)"
+	ArbCategory        = "ARBITRAGE"
 )
 
 func init() {

@@ -18,11 +18,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"github.com/ethereum/go-ethereum/internal/arbitrage/bot"
+	"github.com/ethereum/go-ethereum/internal/arbitrage/bot/configger"
 	"os"
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/ethereum/go-ethereum/accounts"
@@ -45,7 +49,7 @@ import (
 	_ "github.com/ethereum/go-ethereum/eth/tracers/js"
 	_ "github.com/ethereum/go-ethereum/eth/tracers/native"
 
-	"github.com/urfave/cli/v2"
+	cli "github.com/urfave/cli/v2"
 )
 
 const (
@@ -194,6 +198,11 @@ var (
 		utils.MetricsInfluxDBBucketFlag,
 		utils.MetricsInfluxDBOrganizationFlag,
 	}
+
+	arbitrageFlags = []cli.Flag{
+		utils.ArbitrageBotEnvFlag,
+		utils.ArbitrageBotFlag,
+	}
 )
 
 var app = flags.NewApp("the go-ethereum command line interface")
@@ -244,6 +253,7 @@ func init() {
 		consoleFlags,
 		debug.Flags,
 		metricsFlags,
+		arbitrageFlags,
 	)
 	flags.AutoEnvVars(app.Flags, "GETH")
 
@@ -334,8 +344,24 @@ func geth(ctx *cli.Context) error {
 	}
 
 	prepare(ctx)
-	stack, backend := makeFullNode(ctx)
+	stack, backend, eth := makeFullNode(ctx)
 	defer stack.Close()
+
+	wg := &sync.WaitGroup{}
+	ctxSnd, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	if ctx.IsSet("arb.env") {
+		configger.Init(ctx.String("arb.env"))
+	}
+	if ctx.IsSet("arb") {
+		cfg, err := bot.NewServiceConfig(eth, ctxSnd, wg)
+		if err != nil {
+			return fmt.Errorf("failed to init sando config: %s", err.Error())
+		}
+
+		go bot.NewService(cfg).Run()
+	}
 
 	startNode(ctx, stack, backend, false)
 	stack.Wait()

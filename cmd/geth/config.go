@@ -20,6 +20,8 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"github.com/ethereum/go-ethereum/eth"
+	"github.com/ethereum/go-ethereum/eth/downloader"
 	"os"
 	"reflect"
 	"runtime"
@@ -44,7 +46,7 @@ import (
 	"github.com/ethereum/go-ethereum/node"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/naoina/toml"
-	"github.com/urfave/cli/v2"
+	cli "github.com/urfave/cli/v2"
 )
 
 var (
@@ -167,7 +169,7 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 }
 
 // makeFullNode loads geth configuration and creates the Ethereum backend.
-func makeFullNode(ctx *cli.Context) (*node.Node, ethapi.Backend) {
+func makeFullNode(ctx *cli.Context) (*node.Node, ethapi.Backend, *eth.Ethereum) {
 	stack, cfg := makeConfigNode(ctx)
 	if ctx.IsSet(utils.OverrideCancun.Name) {
 		v := ctx.Uint64(utils.OverrideCancun.Name)
@@ -221,13 +223,13 @@ func makeFullNode(ctx *cli.Context) (*node.Node, ethapi.Backend) {
 		}
 		catalyst.RegisterSimulatedBeaconAPIs(stack, simBeacon)
 		stack.RegisterLifecycle(simBeacon)
-	} else {
+	} else if cfg.Eth.SyncMode != downloader.LightSync {
 		err := catalyst.Register(stack, eth)
 		if err != nil {
 			utils.Fatalf("failed to register catalyst service: %v", err)
 		}
 	}
-	return stack, backend
+	return stack, backend, eth
 }
 
 // dumpConfig is the dumpconfig command.

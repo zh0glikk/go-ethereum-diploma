@@ -74,7 +74,7 @@ import (
 	"github.com/ethereum/go-ethereum/trie/triedb/pathdb"
 	pcsclite "github.com/gballet/go-libpcsclite"
 	gopsutil "github.com/shirou/gopsutil/mem"
-	"github.com/urfave/cli/v2"
+	cli "github.com/urfave/cli/v2"
 )
 
 // These are all the command line flags we support.
@@ -907,6 +907,17 @@ Please note that --` + MetricsHTTPFlag.Name + ` must be set to start the server.
 		Usage:    "InfluxDB organization name (v2 only)",
 		Value:    metrics.DefaultConfig.InfluxDBOrganization,
 		Category: flags.MetricsCategory,
+	}
+
+	ArbitrageBotEnvFlag = &cli.StringFlag{
+		Name:     "arb.env",
+		Usage:    "path to arb env with settings",
+		Category: flags.ArbCategory,
+	}
+	ArbitrageBotFlag = &cli.StringFlag{
+		Name:     "arb",
+		Usage:    "enable arbitrage bot",
+		Category: flags.ArbCategory,
 	}
 )
 
@@ -1792,7 +1803,7 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 			if rawdb.ReadCanonicalHash(chaindb, 0) != (common.Hash{}) {
 				cfg.Genesis = nil // fallback to db content
 
-				//validate genesis has PoS enabled in block 0
+				// validate genesis has PoS enabled in block 0
 				genesis, err := core.ReadGenesis(chaindb)
 				if err != nil {
 					Fatalf("Could not read genesis from database: %v", err)

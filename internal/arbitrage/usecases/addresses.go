@@ -50,3 +50,7 @@ func IsBaseCurrency(address common.Address) bool {
 func IsWeth(addr common.Address) bool {
 	return addr == wethAddr
 }
+
+func Weth() common.Address {
+	return wethAddr
+}
